@@ -8,7 +8,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 matplotlib.get_backend()
 
-number_of_frame = 100
+number_of_frame = 9
 sift = cv2.xfeatures2d.SIFT_create()
 
 dataset = np.load('dataset_BGR1.npy')
@@ -35,10 +35,10 @@ kp = sift.detect(old_gray,None)
 p0 = (np.array(list(map(lambda p: [p.pt], kp))[0:10]).astype(int)).astype(np.float32)
 mask = np.zeros_like(old_frame)
 color = np.random.randint(0,255,(p0.shape[0],3))
-w = np.zeros((200,int(len(p0))))
+w = np.zeros((2*number_of_frame,int(len(p0))))
 
 j=1
-while(j!=8):
+while(j!=number_of_frame):
     frame = dataset[j,:,:]
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -47,10 +47,10 @@ while(j!=8):
     for k in range(len(p0)):
         if (st[k,:]==1):
             w[j,k] = p1[k,0,0]
-            w[100+j,k] = p1[k,0,1]
+            w[number_of_frame+j,k] = p1[k,0,1]
         else:
             w[j,k] =0
-            w[100+j,k] = 0
+            w[number_of_frame+j,k] = 0
 
     # Select good points
     good_new = p1[st==1]
@@ -82,13 +82,13 @@ u, s_, v = np.linalg.svd(w_bar, full_matrices=False)
 s = np.diag(s_)[:3,:3]
 u = u[:,0:3]
 v = v[0:3,:]
-
+print(s)
 
 S_cap = np.dot(np.sqrt(s),v[0:3,:])
 R_cap = np.dot(u[:,0:3],np.sqrt(s))
 R_cap_i = R_cap[0,:]
 print(R_cap.shape)
-R_cap_j = R_cap[100,:]
+R_cap_j = R_cap[number_of_frame,:]
 print(R_cap_i,R_cap_j)
 
 
