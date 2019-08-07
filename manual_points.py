@@ -1,3 +1,5 @@
+# This is for cube. 12 features were selected from one face of cube using goodfeaturestotrack, and manually noting down their values for 8 frames.
+
 import numpy as np
 import cv2
 import importlib
